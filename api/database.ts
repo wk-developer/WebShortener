@@ -5,7 +5,8 @@ View the license: https://github.com/xditya/WebShortener/blob/master/LICENSE
 import {
   MongoClient,
   ObjectId,
-} from "https://deno.land/x/mongo@v0.31.2/mod.ts";
+} from "https://deno.land/x/mongo@v0.30.0/mod.ts";  // ⬅️ Use v0.30.0
+
 
 import config from "../env.ts";
 
