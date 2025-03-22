@@ -1,5 +1,5 @@
 import "https://deno.land/std@0.154.0/dotenv/load.ts";
-import { cleanEnv, url } from "https://deno.land/x/envalid@0.1.2/mod.ts";
+import { cleanEnv, str } from "https://deno.land/x/envalid@0.1.2/mod.ts";
 
 // Custom reporter to prevent `Deno.exit()`
 const customReporter = ({ errors }) => {
@@ -9,5 +9,5 @@ const customReporter = ({ errors }) => {
 };
 
 export default cleanEnv(Deno.env.toObject(), {
-  MONGO_URL: url(),
-}, { reporter: customReporter }); // Prevents `Deno.exit()`
+  MONGO_URL: str(), // ✅ Use `str()` instead of `url()`
+}, { reporter: customReporter });
