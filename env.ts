@@ -8,6 +8,9 @@ const customReporter = ({ errors }) => {
   }
 };
 
-export default cleanEnv(Deno.env.toObject(), {
-  MONGO_URL: str(), // ✅ Use `str()` instead of `url()`
+// Validate environment variables
+const env = cleanEnv(Deno.env.toObject(), {
+  MONGO_URL: str(), // ✅ Ensure it's treated as a string
 }, { reporter: customReporter });
+
+export default env;
