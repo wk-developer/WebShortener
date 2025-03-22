@@ -2,28 +2,24 @@
 (c) @xditya
 View the license: https://github.com/xditya/WebShortener/blob/master/LICENSE
 */
-import {
-  MongoClient,
-  ObjectId,
-} from "https://deno.land/x/mongo@v0.31.2/mod.ts";
 
+import { MongoClient, ObjectId } from "https://deno.land/x/mongo@v0.31.2/mod.ts";
 import config from "../env.ts";
 
 console.log("Connecting to MongoDB...");
 const client = new MongoClient();
-let mongoUrl = config.MONGO_URL; // ✅ Use as a plain string
+let MONGO_URL = config.MONGO_URL; // ✅ Use the string directly
 
-// ✅ Ensure authMechanism is set correctly
-if (!mongoUrl.includes("authMechanism=")) {
-  const separator = mongoUrl.includes("?") ? "&" : "?";
-  mongoUrl += `${separator}authMechanism=SCRAM-SHA-1`;
+// Ensure the `authMechanism` is set (only if missing)
+if (!MONGO_URL.includes("authMechanism=")) {
+  MONGO_URL += "&authMechanism=SCRAM-SHA-1"; // ✅ Append query param safely
 }
 
 try {
-  await client.connect(mongoUrl); // ✅ Use the string directly
-  console.log("Connected to MongoDB!");
+  await client.connect(MONGO_URL); // ✅ Use MONGO_URL as a string
+  console.log("MongoDB connected successfully!");
 } catch (err) {
-  console.error("Error connecting to MongoDB", err);
+  console.error("Error connecting to MongoDB:", err);
   throw err;
 }
 
