@@ -29,7 +29,8 @@ interface UrlSchema {
   url: string;
 }
 
-const urls = db.collection<UrlSchema>("URLS");
+const dbUrl = env.MONGO_URL; // ✅ Use it directly as a string
+
 
 export function checkIfUrlExists(url: string) {
   return urls.findOne({ url });
