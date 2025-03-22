@@ -11,16 +11,22 @@ import config from "../env.ts";
 
 console.log("Connecting to MongoDB...");
 const client = new MongoClient();
-const MONGO_URL = new URL(config.MONGO_URL);
-if (!MONGO_URL.searchParams.has("authMechanism")) {
-  MONGO_URL.searchParams.set("authMechanism", "SCRAM-SHA-1");
+let mongoUrl = config.MONGO_URL; // ✅ Use as a plain string
+
+// ✅ Ensure authMechanism is set correctly
+if (!mongoUrl.includes("authMechanism=")) {
+  const separator = mongoUrl.includes("?") ? "&" : "?";
+  mongoUrl += `${separator}authMechanism=SCRAM-SHA-1`;
 }
+
 try {
-  await client.connect(MONGO_URL.href);
+  await client.connect(mongoUrl); // ✅ Use the string directly
+  console.log("Connected to MongoDB!");
 } catch (err) {
   console.error("Error connecting to MongoDB", err);
   throw err;
 }
+
 const db = client.database("SelfShortener");
 
 interface UrlSchema {
@@ -29,8 +35,7 @@ interface UrlSchema {
   url: string;
 }
 
-const dbUrl = env.MONGO_URL; // ✅ Use it directly as a string
-
+const urls = db.collection<UrlSchema>("URLS");
 
 export function checkIfUrlExists(url: string) {
   return urls.findOne({ url });
