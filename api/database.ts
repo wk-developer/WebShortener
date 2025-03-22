@@ -1,3 +1,7 @@
+/*
+(c) @xditya
+View the license: https://github.com/xditya/WebShortener/blob/master/LICENSE
+*/
 import {
   MongoClient,
   ObjectId,
@@ -7,15 +11,16 @@ import config from "../env.ts";
 
 console.log("Connecting to MongoDB...");
 const client = new MongoClient();
+let mongoUrl = config.MONGO_URL; // ✅ Use as a plain string
 
-// Force SSL/TLS options
-const mongoUrl = config.MONGO_URL;
+// ✅ Ensure authMechanism is set correctly
+if (!mongoUrl.includes("authMechanism=")) {
+  const separator = mongoUrl.includes("?") ? "&" : "?";
+  mongoUrl += `${separator}authMechanism=SCRAM-SHA-1`;
+}
 
 try {
-  await client.connect(mongoUrl, {
-    tls: true, // ✅ Explicitly enable TLS
-    directConnection: true, // ✅ Force direct connection to avoid DNS issues
-  });
+  await client.connect(mongoUrl); // ✅ Use the string directly
   console.log("Connected to MongoDB!");
 } catch (err) {
   console.error("Error connecting to MongoDB", err);
